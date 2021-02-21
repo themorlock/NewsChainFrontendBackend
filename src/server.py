@@ -14,10 +14,14 @@ app = flask.Flask(__name__)
 
 @app.route('/get_latest_blockchain', methods=['GET'])
 def get_latest_blockchain():
-    peer_address = requests.get('http://' + CENTRAL_SERVER_ADDRESS + ':' + str(PORT) + '/get_peer_addresses').json()[0]
-    json_dict = json.loads(requests.get('http://' + peer_address + ':' + str(PORT) + '/get_blockchain').text)
-    json_dict.update({'py/object': 'Blockchain.Blockchain'})
-    return json.dumps(json_dict)
+    peer_addresses = requests.get('http://' + CENTRAL_SERVER_ADDRESS + ':' + str(PORT) + '/get_peer_addresses').json()
+    for peer_address in peer_addresses:
+        try:
+            json_dict = json.loads(requests.get('http://' + peer_address + ':' + str(PORT) + '/get_blockchain').text)
+            json_dict.update({'py/object': 'Blockchain.Blockchain'})
+            return json.dumps(json_dict)
+        except:
+            pass
 
 
 @app.route('/generate_keys', methods=['GET'])
@@ -41,8 +45,12 @@ def broadcast_article():
     article = Article.Article(text, signature, e, n)
     if not article.verify():
         return 'Not Valid'
-    peer_address = requests.get('http://' + CENTRAL_SERVER_ADDRESS + ':' + str(PORT) + '/get_peer_addresses').json()[0]
-    requests.post('http://' + peer_address + ':' + str(PORT) + '/new_article', data=jsonpickle.encode(article))
+    peer_addresses = requests.get('http://' + CENTRAL_SERVER_ADDRESS + ':' + str(PORT) + '/get_peer_addresses').json()
+    for peer_address in peer_addresses:
+        try:
+            requests.post('http://' + peer_address + ':' + str(PORT) + '/new_article', data=jsonpickle.encode(article))
+        except:
+            pass
     return 'Valid'
 
 
