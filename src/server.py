@@ -38,9 +38,9 @@ def generate_keys():
 @app.route('/broadcast_article', methods=['POST'])
 def broadcast_article():
     text = flask.request.args.get('text', None)
-    e = flask.request.args.get('e', None)
-    d = flask.request.args.get('d', None)
-    n = flask.request.args.get('n', None)
+    e = int(flask.request.args.get('e', None))
+    d = int(flask.request.args.get('d', None))
+    n = int(flask.request.args.get('n', None))
     signature = pow(int.from_bytes(hashlib.sha512(str.encode(text)).digest(), byteorder='big'), d, n)
     article = Article.Article(text, signature, e, n)
     if not article.verify():
