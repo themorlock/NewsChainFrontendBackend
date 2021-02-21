@@ -28,9 +28,9 @@ def get_latest_blockchain():
 def generate_keys():
     key_pair = RSA.generate(bits=1024)
     key_pair_dict = {
-        'e': key_pair.e,
-        'd': key_pair.d,
-        'n': key_pair.n
+        'e': str(key_pair.e),
+        'd': str(key_pair.d),
+        'n': str(key_pair.n)
     }
     return json.dumps(key_pair_dict)
 
