@@ -15,7 +15,7 @@ app = flask.Flask(__name__)
 @app.route('/get_latest_blockchain', methods=['GET'])
 def get_latest_blockchain():
     peer_address = requests.get('http://' + CENTRAL_SERVER_ADDRESS + ':' + str(PORT) + '/get_peer_addresses').json()[0]
-    json_dict = json.loads(requests.get('http://' + peer_address + ':' + str(PORT) + '/get_blockchain').text.decode('utf-8'))
+    json_dict = json.loads(requests.get('http://' + peer_address + ':' + str(PORT) + '/get_blockchain').text)
     json_dict.update({'py/object': 'Blockchain.Blockchain'})
     return json.dumps(json_dict)
 
