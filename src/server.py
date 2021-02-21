@@ -44,7 +44,7 @@ def broadcast_article():
     signature = pow(int.from_bytes(hashlib.sha512(str.encode(text)).digest(), byteorder='big'), d, n)
     article = Article.Article(text, signature, e, n)
     if not article.verify():
-        return 'Not Valid'
+        return 'Not Valid', 400
     peer_addresses = requests.get('http://' + CENTRAL_SERVER_ADDRESS + ':' + str(PORT) + '/get_peer_addresses').json()
     for peer_address in peer_addresses:
         try:
